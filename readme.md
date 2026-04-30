@@ -34,13 +34,13 @@ A RESTful API for managing intercity bus routes, scheduling trips, and handling 
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/yourusername/bus-ticket-api.git](https://github.com/yourusername/bus-ticket-api.git)
-   cd bus-ticket-api
+   git clone https://github.com/raiyan-takrim/trip-buddy.git
+   cd trip-buddy
    ```
 
 2. **Database Configuration:**
     * Ensure PostgreSQL is running locally.
-    * Create a database named `bus_booking_db`.
+    * Create a database named `trip-buddy`.
     * Create an `application-dev.properties` file in `src/main/resources` with your local database credentials (this file is git-ignored).
 
 3. **Run the application:**
