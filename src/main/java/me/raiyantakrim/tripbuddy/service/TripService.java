@@ -2,7 +2,7 @@ package me.raiyantakrim.tripbuddy.service;
 
 import lombok.RequiredArgsConstructor;
 import me.raiyantakrim.tripbuddy.DTO.SeatDTO;
-import me.raiyantakrim.tripbuddy.DTO.TripDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripRequestDTO;
 import me.raiyantakrim.tripbuddy.entity.Route;
 import me.raiyantakrim.tripbuddy.entity.Trip;
 import me.raiyantakrim.tripbuddy.repository.RouteRepository;
@@ -50,7 +50,7 @@ public class TripService {
     /*###############################################
     *               CREATE method(s)                *
     ###############################################*/
-    public Trip saveTrip(TripDTO trip) {
+    public Trip saveTrip(TripRequestDTO trip) {
         Route route = routeRepository.findById(trip.routeId()).orElseThrow(()-> new RuntimeException("Route not found"));
         Trip newTrip = new Trip();
         newTrip.setRoute(route);

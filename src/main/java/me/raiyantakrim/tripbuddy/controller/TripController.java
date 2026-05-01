@@ -3,7 +3,7 @@ package me.raiyantakrim.tripbuddy.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.raiyantakrim.tripbuddy.DTO.SeatDTO;
-import me.raiyantakrim.tripbuddy.DTO.TripDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripRequestDTO;
 import me.raiyantakrim.tripbuddy.entity.Trip;
 import me.raiyantakrim.tripbuddy.service.TripService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -41,7 +41,7 @@ public class TripController {
     *               POST Routes                     *
     ###############################################*/
     @PostMapping
-    public ResponseEntity<Trip> saveTrip(@RequestBody TripDTO trip) {
+    public ResponseEntity<Trip> saveTrip(@RequestBody TripRequestDTO trip) {
         return ResponseEntity.ok().body(tripService.saveTrip(trip));
     }
 }
