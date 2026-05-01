@@ -2,6 +2,7 @@ package me.raiyantakrim.tripbuddy.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import me.raiyantakrim.tripbuddy.utility.BookingStatus;
 
 import java.util.List;
 import java.util.UUID;
