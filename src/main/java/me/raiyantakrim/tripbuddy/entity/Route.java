@@ -10,11 +10,14 @@ import java.util.UUID;
 public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "route_id")
-    private UUID routeId;
-    @Column(name = "origin_city")
+    private UUID id;
+
+    @Column(name = "origin_city",  nullable = false)
     private String originCity;
-    @Column(name = "destination_city")
+
+    @Column(name = "destination_city",   nullable = false)
     private String destinationCity;
+
+    @Column(name = "distance_km")
     private double distance;
 }

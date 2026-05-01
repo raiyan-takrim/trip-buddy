@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import me.raiyantakrim.tripbuddy.utility.BookingStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 @Data
@@ -12,16 +13,23 @@ import java.util.UUID;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "booking_id")
-    private UUID bookingId;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    private UUID id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",  nullable = false)
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "trip_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
-    @OneToMany
-    @JoinColumn(name = "seat_id")
-    private List<Seat> seat;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seat_id", nullable = false)
+    private Seat seat;
+
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

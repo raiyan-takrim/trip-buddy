@@ -11,12 +11,13 @@ import java.util.UUID;
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "seat_id")
-    private UUID seatId;
-    @ManyToOne
-    @JoinColumn(name = "trip_id")
+    private UUID id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trip_id",   nullable = false)
     private Trip trip;
-    @Column(name = "seat_number")
+    @Column(name = "seat_number",   nullable = false)
     private String seatNumber;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private SeatStatus status;
 }
