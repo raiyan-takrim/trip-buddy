@@ -1,8 +1,10 @@
 package me.raiyantakrim.tripbuddy.service;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import me.raiyantakrim.tripbuddy.DTO.SeatDTO;
 import me.raiyantakrim.tripbuddy.DTO.TripRequestDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripSearchDTO;
 import me.raiyantakrim.tripbuddy.entity.Route;
 import me.raiyantakrim.tripbuddy.entity.Trip;
 import me.raiyantakrim.tripbuddy.repository.RouteRepository;
@@ -27,10 +29,22 @@ public class TripService {
     /*###############################################
     *               SEARCH method(s)                *
     ###############################################*/
-    public List<Trip> findAvailableTrips(String origin, String destination, LocalDate date) {
+    public List<TripSearchDTO> findAvailableTrips(String origin, String destination, @NotNull LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
-        return tripRepository.searchTrips(origin, destination, startOfDay, endOfDay);
+        List<Trip> trips = tripRepository.searchTrips(origin, destination, startOfDay, endOfDay);
+        return trips
+                .stream()
+                .map(trip -> new TripSearchDTO(trip.getId(),
+                        trip.getRoute().getOriginCity(),
+                        trip.getRoute().getDestinationCity(),
+                        trip.getRoute().getDistance(),
+                        trip.getDepartureTime(),
+                        trip.getArrivalTime(),
+                        trip.getBusPlateNumber(),
+                        trip.getBasePrice()
+                    ))
+                .toList();
     }
 
     /*###############################################

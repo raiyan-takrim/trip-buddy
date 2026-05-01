@@ -4,6 +4,7 @@ package me.raiyantakrim.tripbuddy.controller;
 import lombok.RequiredArgsConstructor;
 import me.raiyantakrim.tripbuddy.DTO.SeatDTO;
 import me.raiyantakrim.tripbuddy.DTO.TripRequestDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripSearchDTO;
 import me.raiyantakrim.tripbuddy.entity.Trip;
 import me.raiyantakrim.tripbuddy.service.TripService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,14 +24,11 @@ public class TripController {
     *               GET Routes                     *
     ###############################################*/
     @GetMapping("/search")
-    public ResponseEntity<List<Trip>> search(@RequestParam String origin,
-                                             @RequestParam String destination,
-                                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        List<Trip> trips = tripService.findAvailableTrips(origin, destination, date);
-        if (trips.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }else
-            return ResponseEntity.ok(trips);
+    public ResponseEntity<List<TripSearchDTO>> search(@RequestParam String origin,
+                                                      @RequestParam String destination,
+                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<TripSearchDTO> trips = tripService.findAvailableTrips(origin, destination, date);
+        return ResponseEntity.ok(trips);
     }
 
     @GetMapping("/{tripId}/seats")
