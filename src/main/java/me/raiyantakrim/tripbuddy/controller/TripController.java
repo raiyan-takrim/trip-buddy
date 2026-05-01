@@ -2,17 +2,16 @@ package me.raiyantakrim.tripbuddy.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import me.raiyantakrim.tripbuddy.DTO.SeatDTO;
 import me.raiyantakrim.tripbuddy.entity.Trip;
 import me.raiyantakrim.tripbuddy.service.TripService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,5 +28,10 @@ public class TripController {
             return ResponseEntity.noContent().build();
         }else
             return ResponseEntity.ok(trips);
+    }
+
+    @GetMapping("/{tripId}/seats")
+    public ResponseEntity<List<SeatDTO>> getSeats(@PathVariable UUID tripId) {
+        return ResponseEntity.ok(tripService.getTripSeatMap(tripId));
     }
 }
