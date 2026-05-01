@@ -1,10 +1,10 @@
 package me.raiyantakrim.tripbuddy.service;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import me.raiyantakrim.tripbuddy.DTO.SeatDTO;
-import me.raiyantakrim.tripbuddy.DTO.TripRequestDTO;
-import me.raiyantakrim.tripbuddy.DTO.TripSearchDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripCreateReqDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripCreateResDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripSearchResDTO;
 import me.raiyantakrim.tripbuddy.entity.Route;
 import me.raiyantakrim.tripbuddy.entity.Trip;
 import me.raiyantakrim.tripbuddy.repository.RouteRepository;
@@ -29,13 +29,13 @@ public class TripService {
     /*###############################################
     *               SEARCH method(s)                *
     ###############################################*/
-    public List<TripSearchDTO> findAvailableTrips(String origin, String destination, @NotNull LocalDate date) {
+    public List<TripSearchResDTO> findAvailableTrips(String origin, String destination, LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
         List<Trip> trips = tripRepository.searchTrips(origin, destination, startOfDay, endOfDay);
         return trips
                 .stream()
-                .map(trip -> new TripSearchDTO(trip.getId(),
+                .map(trip -> new TripSearchResDTO(trip.getId(),
                         trip.getRoute().getOriginCity(),
                         trip.getRoute().getDestinationCity(),
                         trip.getRoute().getDistance(),
@@ -64,7 +64,7 @@ public class TripService {
     /*###############################################
     *               CREATE method(s)                *
     ###############################################*/
-    public Trip saveTrip(TripRequestDTO trip) {
+    public TripCreateResDTO saveTrip(TripCreateReqDTO trip) {
         Route route = routeRepository.findById(trip.routeId()).orElseThrow(()-> new RuntimeException("Route not found"));
         Trip newTrip = new Trip();
         newTrip.setRoute(route);
@@ -72,7 +72,18 @@ public class TripService {
         newTrip.setDepartureTime(trip.departureTime());
         newTrip.setBasePrice(trip.basePrice());
         newTrip.setBusPlateNumber(trip.busPlateNumber());
-        newTrip = tripRepository.save(newTrip);
-        return seatService.initiateSeatForNewTrip(newTrip);
+
+        Trip savedTrip = tripRepository.save(newTrip);
+
+        // Creating available seats for the new trip
+        seatService.initiateSeatForNewTrip(newTrip);
+
+        return new TripCreateResDTO(
+                savedTrip.getId(),
+                savedTrip.getDepartureTime(),
+                savedTrip.getArrivalTime(),
+                savedTrip.getBusPlateNumber(),
+                savedTrip.getBasePrice()
+        );
     }
 }

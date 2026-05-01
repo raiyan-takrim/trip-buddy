@@ -3,8 +3,9 @@ package me.raiyantakrim.tripbuddy.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.raiyantakrim.tripbuddy.DTO.SeatDTO;
-import me.raiyantakrim.tripbuddy.DTO.TripRequestDTO;
-import me.raiyantakrim.tripbuddy.DTO.TripSearchDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripCreateReqDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripCreateResDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripSearchResDTO;
 import me.raiyantakrim.tripbuddy.entity.Trip;
 import me.raiyantakrim.tripbuddy.service.TripService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,10 +25,10 @@ public class TripController {
     *               GET Routes                     *
     ###############################################*/
     @GetMapping("/search")
-    public ResponseEntity<List<TripSearchDTO>> search(@RequestParam String origin,
-                                                      @RequestParam String destination,
-                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        List<TripSearchDTO> trips = tripService.findAvailableTrips(origin, destination, date);
+    public ResponseEntity<List<TripSearchResDTO>> search(@RequestParam String origin,
+                                                         @RequestParam String destination,
+                                                         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<TripSearchResDTO> trips = tripService.findAvailableTrips(origin, destination, date);
         return ResponseEntity.ok(trips);
     }
 
@@ -39,7 +40,7 @@ public class TripController {
     *               POST Routes                     *
     ###############################################*/
     @PostMapping
-    public ResponseEntity<Trip> saveTrip(@RequestBody TripRequestDTO trip) {
+    public ResponseEntity<TripCreateResDTO> saveTrip(@RequestBody TripCreateReqDTO trip) {
         return ResponseEntity.ok().body(tripService.saveTrip(trip));
     }
 }
