@@ -15,13 +15,13 @@ A RESTful API for managing intercity bus routes, scheduling trips, and handling 
 ### Phase 1: Core Foundation (In Progress)
 - [x] Project Initialization & Git Setup
 - [x] Entity creation (`User`, `Route`, `Trip`, etc.)
-- [ ] Basic CRUD operations for Routes and Trips
+- [x] Basic CRUD operations for Routes and Trips
 - [x] Search endpoints (by origin, destination, date)
 
 ### Phase 2: Booking Engine (Planned)
 - [ ] Create `Seat` and `Booking` entities
-- [ ] Seat generation logic per trip
-- [ ] View seat availability endpoint
+- [x] Seat generation logic per trip
+- [x] View seat availability endpoint
 - [ ] Basic reservation endpoint
 
 ### Phase 3: Concurrency & Automation (Planned)
