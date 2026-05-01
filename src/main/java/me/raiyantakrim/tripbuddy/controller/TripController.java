@@ -3,6 +3,7 @@ package me.raiyantakrim.tripbuddy.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.raiyantakrim.tripbuddy.DTO.SeatDTO;
+import me.raiyantakrim.tripbuddy.DTO.TripDTO;
 import me.raiyantakrim.tripbuddy.entity.Trip;
 import me.raiyantakrim.tripbuddy.service.TripService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,7 +19,9 @@ import java.util.UUID;
 @RequestMapping("api/v1/trips")
 public class TripController {
     private final TripService tripService;
-
+    /*###############################################
+    *               GET Routes                     *
+    ###############################################*/
     @GetMapping("/search")
     public ResponseEntity<List<Trip>> search(@RequestParam String origin,
                                              @RequestParam String destination,
@@ -33,5 +36,12 @@ public class TripController {
     @GetMapping("/{tripId}/seats")
     public ResponseEntity<List<SeatDTO>> getSeats(@PathVariable UUID tripId) {
         return ResponseEntity.ok(tripService.getTripSeatMap(tripId));
+    }
+    /*###############################################
+    *               POST Routes                     *
+    ###############################################*/
+    @PostMapping
+    public ResponseEntity<Trip> saveTrip(@RequestBody TripDTO trip) {
+        return ResponseEntity.ok().body(tripService.saveTrip(trip));
     }
 }

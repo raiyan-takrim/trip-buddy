@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TripRepository extends JpaRepository<Trip, UUID> {
+    // Custom query for searching trip using origin, destination and departure time.
+
     @Query("SELECT t FROM Trip t " +
             "WHERE t.route.originCity = :origin " +
             "AND t.route.destinationCity = :destination " +
