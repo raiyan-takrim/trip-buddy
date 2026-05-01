@@ -6,7 +6,6 @@ import me.raiyantakrim.tripbuddy.DTO.SeatDTO;
 import me.raiyantakrim.tripbuddy.DTO.TripCreateReqDTO;
 import me.raiyantakrim.tripbuddy.DTO.TripCreateResDTO;
 import me.raiyantakrim.tripbuddy.DTO.TripSearchResDTO;
-import me.raiyantakrim.tripbuddy.entity.Trip;
 import me.raiyantakrim.tripbuddy.service.TripService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;

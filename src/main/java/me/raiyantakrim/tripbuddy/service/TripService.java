@@ -1,5 +1,6 @@
 package me.raiyantakrim.tripbuddy.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import me.raiyantakrim.tripbuddy.DTO.SeatDTO;
 import me.raiyantakrim.tripbuddy.DTO.TripCreateReqDTO;
@@ -64,6 +65,7 @@ public class TripService {
     /*###############################################
     *               CREATE method(s)                *
     ###############################################*/
+    @Transactional // To prevent trip creation if seat initiation fails
     public TripCreateResDTO saveTrip(TripCreateReqDTO trip) {
         Route route = routeRepository.findById(trip.routeId()).orElseThrow(()-> new RuntimeException("Route not found"));
         Trip newTrip = new Trip();
