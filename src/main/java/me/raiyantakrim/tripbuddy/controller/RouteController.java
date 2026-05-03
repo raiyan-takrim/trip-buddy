@@ -1,6 +1,8 @@
 package me.raiyantakrim.tripbuddy.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.raiyantakrim.tripbuddy.DTO.CreateRouteDTO;
+import me.raiyantakrim.tripbuddy.DTO.CreateRouteResDTO;
 import me.raiyantakrim.tripbuddy.entity.Route;
 import me.raiyantakrim.tripbuddy.service.RouteService;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +17,12 @@ public class RouteController {
     private final RouteService routeService;
 
     @GetMapping
-    public ResponseEntity<List<Route>> getAllRoute() {
+    public ResponseEntity<List<CreateRouteResDTO>> getAllRoute() {
         return ResponseEntity.ok().body(routeService.getAllRoute());
     }
 
     @PostMapping
-    public ResponseEntity<Route> addRoute(@RequestBody Route route) {
-        return ResponseEntity.ok().body(routeService.saveRoute(route));
+    public ResponseEntity<Route> addRoute(@RequestBody CreateRouteDTO routeDetails) {
+        return ResponseEntity.ok().body(routeService.saveRoute(routeDetails));
     }
 }
