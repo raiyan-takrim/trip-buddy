@@ -7,6 +7,8 @@ import me.raiyantakrim.tripbuddy.DTO.ReserveSeatRequestDTO;
 import me.raiyantakrim.tripbuddy.entity.Booking;
 import me.raiyantakrim.tripbuddy.entity.Seat;
 import me.raiyantakrim.tripbuddy.entity.User;
+import me.raiyantakrim.tripbuddy.exception.ResourceNotFoundException;
+import me.raiyantakrim.tripbuddy.exception.SeatAlreadyReservedException;
 import me.raiyantakrim.tripbuddy.repository.BookingRepository;
 import me.raiyantakrim.tripbuddy.repository.SeatRepository;
 import me.raiyantakrim.tripbuddy.repository.UserRepository;
@@ -25,12 +27,12 @@ public class BookingService {
     @Transactional
     public BookingResponseDTO reserveSeat(ReserveSeatRequestDTO request){
         // Verify the User exits
-        User user = userRepository.findById(request.userId()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(request.userId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         // Get the seat with Database Lock.
         // If another user is currently accessing the row, this process will wait for that to finish.
         // If the seat is already LOCK or BOOKED this will return an empty optional
         Seat seat = seatRepository.findAvailableSeatByIdWithLock(request.seatId())
-                .orElseThrow(() -> new RuntimeException("Conflict: Seat is already reserved or not exists"));
+                .orElseThrow(() -> new SeatAlreadyReservedException("Conflict: Seat is already reserved or not exists"));
         // ==========================================
         // TESTING BLOCK: SIMULATE SLOW PROCESSING
         // ==========================================
@@ -45,7 +47,7 @@ public class BookingService {
 
         // Verify the seat is actually belongs to the Trip
         if (!seat.getTrip().getId().equals(request.tripId())) {
-            throw new RuntimeException("Invalid request: Seat does not belong to this trip");
+            throw new ResourceNotFoundException("Seat does not belong to this trip");
         }
         // Update the Seat status to prevent others from claiming it
         seat.setStatus(SeatStatus.LOCKED);
