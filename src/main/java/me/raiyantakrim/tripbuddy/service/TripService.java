@@ -59,6 +59,8 @@ public class TripService {
                         seat.getSeatNumber(),
                         seat.getStatus()
                 ))
+                // Sort seats by seat number in alphabetic order (A1, A2, A3, A4, B1, B2...)
+                .sorted((s1,s2) -> s1.seatNumber().compareTo(s2.seatNumber()))
                 .toList();
     }
 
