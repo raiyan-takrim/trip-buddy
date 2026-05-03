@@ -2,11 +2,9 @@ package me.raiyantakrim.tripbuddy.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import me.raiyantakrim.tripbuddy.DTO.BookingResponseDTO;
-import me.raiyantakrim.tripbuddy.DTO.ReserveSeatRequestDTO;
-import me.raiyantakrim.tripbuddy.entity.Booking;
-import me.raiyantakrim.tripbuddy.entity.Seat;
-import me.raiyantakrim.tripbuddy.entity.User;
+import me.raiyantakrim.tripbuddy.DTO.*;
+import me.raiyantakrim.tripbuddy.entity.*;
+import me.raiyantakrim.tripbuddy.exception.InvalidBookingStateException;
 import me.raiyantakrim.tripbuddy.exception.ResourceNotFoundException;
 import me.raiyantakrim.tripbuddy.exception.SeatAlreadyReservedException;
 import me.raiyantakrim.tripbuddy.repository.BookingRepository;
@@ -17,6 +15,7 @@ import me.raiyantakrim.tripbuddy.utility.SeatStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -71,5 +70,64 @@ public class BookingService {
                 expiresAt
         );
 
+    }
+    @Transactional
+    public TicketDTO confirmBooking(UUID bookingId, ConfirmBookingRequestDTO request) {
+
+        // 1. Fetch the booking
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(()-> new ResourceNotFoundException("Booking not found"));
+        // 2. Check if EXPIRED
+        if (booking.getStatus().equals(BookingStatus.CANCELLED)){
+            throw new InvalidBookingStateException("Your reservation has expired. Please search for a new seat.");
+        }
+        // 3. Check if already CONFIRMED
+        if (booking.getStatus().equals(BookingStatus.CONFIRMED)){
+            throw new InvalidBookingStateException("This booking has already been confirmed.");
+        }
+        // 4. Simulate payment process
+        if (request.paymentToken() == null || request.paymentToken().isEmpty()) {
+            throw new IllegalArgumentException("Payment token is required");
+        }
+        System.out.println("Processing payment token: " + request.paymentToken() + "... Payment Successful!");
+        // 5. Update status
+        booking.setStatus(BookingStatus.CONFIRMED);
+
+        Seat seat = booking.getSeat();
+        seat.setStatus(SeatStatus.BOOKED); // Permanently booking the seat
+        // 6. Save changes
+        seatRepository.save(seat);
+        Booking savedBooking = bookingRepository.save(booking);
+        // 7. Return ticket
+        Trip trip =  booking.getTrip();
+        User user = booking.getUser();
+        Route route = trip.getRoute();
+        return new TicketDTO(
+                booking.getId(),
+                booking.getStatus(),
+                LocalDateTime.now(),
+                new UserDTO(
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail()
+                ),
+                new TripCreateResDTO(
+                        trip.getId(),
+                        trip.getDepartureTime(),
+                        trip.getArrivalTime(),
+                        trip.getBusPlateNumber(),
+                        trip.getBasePrice()
+                ),
+                new CreateRouteResDTO(
+                        route.getId(),
+                        route.getOriginCity(),
+                        route.getDestinationCity(),
+                        route.getDistance()
+                ),
+                new SeatDTO(
+                        seat.getId(),
+                        seat.getSeatNumber(),
+                        seat.getStatus()
+                )
+        );
     }
 }

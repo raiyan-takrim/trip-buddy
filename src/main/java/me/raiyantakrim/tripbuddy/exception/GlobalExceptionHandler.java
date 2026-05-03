@@ -22,6 +22,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    // Handles 400 Bad Request for expired booking payment
+    @ExceptionHandler(InvalidBookingStateException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidBookingStateException(InvalidBookingStateException ex) {
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     // Handles 409 Conflict (Seat Double Booking)
     @ExceptionHandler(SeatAlreadyReservedException.class)
     public ResponseEntity<ErrorResponseDTO> handleSeatAlreadyReservedException(SeatAlreadyReservedException ex) {
