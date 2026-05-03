@@ -23,7 +23,7 @@ public class BookingController {
     }
     @PostMapping("/{bookingId}/confirm")
     public ResponseEntity<TicketDTO> confirmBooking(@PathVariable UUID bookingId,
-                                                    ConfirmBookingRequestDTO request) {
+                                                    @RequestBody ConfirmBookingRequestDTO request) {
         TicketDTO confirmedTicket = bookingService.confirmBooking(bookingId, request);
         return ResponseEntity.ok(confirmedTicket);
     }
