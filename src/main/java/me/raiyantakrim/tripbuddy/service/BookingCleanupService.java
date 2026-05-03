@@ -24,10 +24,10 @@ public class BookingCleanupService{
     @Transactional
     public void releaseExpiredHolds(){
         // Calculate the 10 min ago time
-        LocalDateTime tenMinuteAge = LocalDateTime.now().minusMinutes(10);
+        LocalDateTime tenMinuteAgo = LocalDateTime.now().minusMinutes(10);
 
         // Fetch all expired Bookings
-        List<Booking> expiredBookings = bookingRepository.findExpiredBookings(tenMinuteAge);
+        List<Booking> expiredBookings = bookingRepository.findExpiredBookings(tenMinuteAgo);
         if(expiredBookings.isEmpty()){
             return;
         }
